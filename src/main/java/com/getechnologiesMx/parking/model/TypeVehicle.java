@@ -1,6 +1,6 @@
 package com.getechnologiesMx.parking.model;
 
-import com.getechnologiesMx.parking.dto.VehicleDTO;
+import com.getechnologiesMx.parking.dto.TypeVehicleDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,19 +10,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Data
 @NoArgsConstructor
-public class Vehicle {
-    @Id
-    @Column(name = "vehicle_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    private String numberPlate;
+@Data
+public class TypeVehicle {
 
-    public Vehicle(VehicleDTO vehicleDTO) {
-        this.id = vehicleDTO.getId();
-        this.numberPlate = vehicleDTO.getNumberPlate();
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "typevehicle_id")
+    private Integer id;
+    private String name;
+
+    public TypeVehicle(TypeVehicleDTO typeVehicleDTO) {
+        this.id = typeVehicleDTO.getId();
+        this.name = typeVehicleDTO.getName();
     }
+
 
 
 }
