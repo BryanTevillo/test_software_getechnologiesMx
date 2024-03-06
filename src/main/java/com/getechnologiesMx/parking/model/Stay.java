@@ -28,16 +28,14 @@ public class Stay {
     private LocalDateTime timeEntry;
     private LocalDateTime timeDeparture;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_typevehicle_id")
-    private TypeVehicle typeVehicle;
+
 
     public Stay(StayDTO stayDTO) {
         this.id = stayDTO.getId();
         this.timeEntry = stayDTO.getTimeEntry();
         this.timeDeparture = stayDTO.getTimeDeparture();
         this.vehicle = new Vehicle(stayDTO.getVehicleDTO());
-        this.typeVehicle = new TypeVehicle(stayDTO.getTypeVehicleDTO());
+
     }
 
 }

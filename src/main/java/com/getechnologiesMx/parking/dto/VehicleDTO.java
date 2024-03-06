@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 public class VehicleDTO {
     private Integer id;
     private String numberPlate;
-
+    private TypeVehicleDTO typeVehicleDTO;
 
     public VehicleDTO(Vehicle vehicle) {
         this.id = vehicle.getId();
         this.numberPlate = vehicle.getNumberPlate();
+        this.typeVehicleDTO = new TypeVehicleDTO(vehicle.getTypeVehicle());
     }
 
 

@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,9 +21,14 @@ public class Vehicle {
     private Integer id;
     private String numberPlate;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_typevehicle_id")
+    private TypeVehicle typeVehicle;
+
     public Vehicle(VehicleDTO vehicleDTO) {
         this.id = vehicleDTO.getId();
         this.numberPlate = vehicleDTO.getNumberPlate();
+        this.typeVehicle = new TypeVehicle(vehicleDTO.getTypeVehicleDTO());
     }
 
 

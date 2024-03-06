@@ -1,0 +1,6 @@
+Informe de Pagos de Residentes:
+
+Num. Placa:		Tiempo Estacionado (min):		Cantidad a Pagar:
+
+	3RE					2									0.1
+	4RE					2									0.1

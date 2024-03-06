@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ public class TypeVehicle {
     @Column(name = "typevehicle_id")
     private Integer id;
     private String name;
+
 
     public TypeVehicle(TypeVehicleDTO typeVehicleDTO) {
         this.id = typeVehicleDTO.getId();

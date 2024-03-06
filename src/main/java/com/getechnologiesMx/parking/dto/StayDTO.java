@@ -2,8 +2,6 @@ package com.getechnologiesMx.parking.dto;
 
 import java.time.LocalDateTime;
 import com.getechnologiesMx.parking.model.Stay;
-import com.getechnologiesMx.parking.model.TypeVehicle;
-import com.getechnologiesMx.parking.model.Vehicle;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,14 +13,13 @@ public class StayDTO {
     private LocalDateTime timeEntry;
     private LocalDateTime timeDeparture;
     private VehicleDTO vehicleDTO;
-    private TypeVehicleDTO typeVehicleDTO;
+
 
     public StayDTO(Stay stay) {
         this.id = stay.getId();
         this.timeEntry = stay.getTimeEntry();
         this.timeDeparture = stay.getTimeDeparture();
         this.vehicleDTO = new VehicleDTO(stay.getVehicle());
-        this.typeVehicleDTO = new TypeVehicleDTO(stay.getTypeVehicle());
     }
 
 
