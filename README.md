@@ -25,6 +25,25 @@ La aplicación Parking permite a los usuarios administrar un estacionamiento, re
 4. Compila el proyecto: `mvn clean install`
 5. Ejecuta la aplicación: `java -jar target/parking-1.0.jar`
 
+## Base de Datos
+El proyecto requiere una base de datos MySQL para su funcionamiento. Asegúrate de tener MySQL instalado y configurado correctamente.
+
+## Conexión a la Base de Datos
+Para conectar con la base de datos, se necesita un usuario con privilegios de administrador (root) y la contraseña correspondiente.
+Crea automaticamente una base de datos parking si no se encuentra.
+Utilizaremos las siguientes credenciales:
+
+- **Usuario:** root
+- **Contraseña:** Pa$$w0rd
+
+## Lombok
+El proyecto utiliza Lombok para la generación automática de código repetitivo. Asegúrate de tener Lombok instalado en tu entorno de desarrollo.
+
+### Configuración de Lombok
+- **Eclipse:** Sigue las instrucciones en este [enlace](https://projectlombok.org/setup/eclipse) para configurar Lombok en Eclipse.
+  
+- **IntelliJ IDEA:** Para configurar Lombok en IntelliJ IDEA, sigue las instrucciones disponibles en este [enlace](https://projectlombok.org/setup/intellij).
+
 ## Uso
 
 1. Accede a la API en tu navegador web: `http://localhost:8080`
