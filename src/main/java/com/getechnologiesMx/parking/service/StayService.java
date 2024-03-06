@@ -22,11 +22,80 @@ public class StayService {
     private StayRepository stayRepository;
     @Autowired
     FabricStayService fabricStayService;
+    @Autowired
+    private VehicleService vehicleService;
 
-    public void registerEntry(StayDTO stayDTO) {
-        // Lógica para registrar la entrada de un vehículo
-        stayDTO.setTimeEntry(LocalDateTime.now());
-        stayRepository.save(fabricStayService.createStay(stayDTO));
+
+    public Optional<StayDTO> registerEntry(VehicleDTO vehicleDTO) {
+        // Obtener el vehículo por número de placa
+        VehicleDTO vehicleDtoSave = vehicleService.findByNumberPlate(vehicleDTO.getNumberPlate());
+        StayDTO stayDto = new StayDTO();
+
+        if (vehicleDtoSave != null) {
+            StayDTO stayDtoSearch = findByVehicle(vehicleDtoSave);
+            if (stayDtoSearch == null) {
+                // Lógica para registrar la entrada de un vehículo
+                stayDto.setVehicleDTO(vehicleDtoSave);
+                stayDto.setTimeEntry(LocalDateTime.now());
+                System.out.println("Entrada registrada exitosamente.");
+                return Optional.of(fabricStayService
+                        .createStayDto(stayRepository.save(fabricStayService.createStay(stayDto))));
+            } else {
+                System.out
+                        .println("Ya hay un registro de entrada, no se puede registrar nuevamente");
+                return Optional.empty();
+            }
+        }
+
+        else {
+            System.out.println("No se encontro Vehiculo registrado");
+            return Optional.empty();
+        }
+
+    }
+
+    public Optional<StayDTO> registerDeparture(VehicleDTO vehicleDto) {
+
+        // Obtener el vehículo por número de placa
+        VehicleDTO vehicleDtoSave = vehicleService.findByNumberPlate(vehicleDto.getNumberPlate());
+        if (vehicleDtoSave != null) {
+            StayDTO stayDto = findByVehicle(vehicleDtoSave);
+            if (stayDto != null) {
+                if (stayDto.getTimeDeparture() == null) {
+                    stayDto.setVehicleDTO(vehicleDtoSave);
+                    stayDto.setTimeDeparture(LocalDateTime.now());
+                    stayRepository.save(fabricStayService.createStay(stayDto));
+                    System.out.println("\n\nSalida registrada exitosamente.\n\n");
+                    if (stayDto.getVehicleDTO().getTypeVehicleDTO().getName()
+                            .equals("NoResident")) {
+                        stayDto.setPayment(ChronoUnit.MINUTES.between(stayDto.getTimeEntry(),
+                                stayDto.getTimeDeparture()) * Constants.priceNoResident);
+                        stayDto.setTimeTotalMin(ChronoUnit.MINUTES.between(stayDto.getTimeEntry(),
+                                stayDto.getTimeDeparture()));
+                        System.out
+                                .println("Num. Placa:\t" + stayDto.getVehicleDTO().getNumberPlate()
+                                        + "\tTiempo Estacionado (min):\t"
+                                        + stayDto.getTimeTotalMin() + "\tCantidad a Pagar:\t"
+                                        + stayDto.getPayment() * Constants.priceNoResident);
+                        System.out.println("\n");
+                    }
+                    return Optional.of(stayDto);
+                } else {
+                    System.out.println(
+                            "Ya se encuentra registrada una Salida no se puede volver a ingresar.");
+                    return Optional.empty();
+                }
+
+            } else {
+                System.out.println(
+                        "No se encontro registro de entrada al estacionamiento del auto, favor de ingresar una entrada");
+                return Optional.empty();
+            }
+
+        } else {
+            System.out.println("No se encontro Vehiculo registrado");
+            return Optional.empty();
+        }
     }
 
     public StayDTO findByVehicle(VehicleDTO vehicleDTO) {
@@ -38,12 +107,8 @@ public class StayService {
         return stayDto.orElse(null);
     }
 
-    public void registerDeparture(StayDTO stayDTO) {
-        stayDTO.setTimeDeparture(LocalDateTime.now());
-        stayRepository.save(fabricStayService.createStay(stayDTO));
-    }
 
-    public void iniciarNuevoMes() {
+    public String startMonth() {
         List<StayDTO> staysDto = fabricStayService.createStaysDto(stayRepository.findAll());
         for (StayDTO stayDto : staysDto) {
             if (stayDto.getVehicleDTO().getTypeVehicleDTO().getName().equals("Official")) {
@@ -54,13 +119,14 @@ public class StayService {
                 stayRepository.save(fabricStayService.createStay(stayDto));
             }
         }
+
         System.out.println(
                 "Se eliminan todas las instancias de autos Oficiales y se pone en 0 los autos estacionados de tipo Residente");
-
+        return "Se eliminan todas las instancias de autos Oficiales y se pone en 0 los autos estacionados de tipo Residente";
     }
 
 
-    public File generarInformePagosResidentes(String nameFile) {
+    public File generateResidentPayment(String nameFile) {
         List<StayDTO> staysDto = fabricStayService.createStaysDto(stayRepository.findAll());
         File file = new File(nameFile + ".txt");
         try (FileWriter writer = new FileWriter(file)) {

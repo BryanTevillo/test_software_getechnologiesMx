@@ -1,18 +1,17 @@
 package com.getechnologiesMx.parking.component;
 
 
-import java.time.temporal.ChronoUnit;
 import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import com.getechnologiesMx.parking.dto.StayDTO;
+
 import com.getechnologiesMx.parking.dto.TypeVehicleDTO;
 import com.getechnologiesMx.parking.dto.VehicleDTO;
 import com.getechnologiesMx.parking.service.StayService;
 import com.getechnologiesMx.parking.service.TypeVehicleService;
 import com.getechnologiesMx.parking.service.VehicleService;
-import com.getechnologiesMx.parking.util.Constants;
+
 
 
 @Component
@@ -95,56 +94,17 @@ public class Menu {
         String numberPlate = scanner.nextLine();
 
         // Obtener el vehículo por número de placa
-        VehicleDTO vehicleDto = vehicleService.findByNumberPlate(numberPlate);
-        if (vehicleDto != null) {
-            // Registrar la entrada del vehículo
-            StayDTO stayDto = new StayDTO();
-            stayDto.setVehicleDTO(vehicleDto);
-            stayService.registerEntry(stayDto);
-
-            System.out.println("Entrada registrada exitosamente.");
-        }
-
-        else {
-            System.out.println("No se encontro Vehiculo registrado");
-        }
+        VehicleDTO vehicleDto = new VehicleDTO();
+        vehicleDto.setNumberPlate(numberPlate);
+        stayService.registerEntry(vehicleDto);
     }
 
     private void registerDeparture(Scanner scanner) {
         System.out.print("Ingrese el número de placa del vehículo: ");
         String numberPlate = scanner.nextLine();
-
-        // Obtener el vehículo por número de placa
-        VehicleDTO vehicleDto = vehicleService.findByNumberPlate(numberPlate);
-        if (vehicleDto != null) {
-            StayDTO stayDto = stayService.findByVehicle(vehicleDto);
-            if (stayDto != null) {
-                stayDto.setVehicleDTO(vehicleDto);
-
-                stayService.registerDeparture(stayDto);
-                System.out.println("\n\nSalida registrada exitosamente.\n\n");
-                if (stayDto.getVehicleDTO().getTypeVehicleDTO().getName().equals("NoResident")) {
-                    System.out
-                            .println("Num. Placa:\t" + stayDto.getVehicleDTO().getNumberPlate()
-                                    + "\tTiempo Estacionado (min):\t"
-                                    + ChronoUnit.MINUTES.between(
-                                            stayDto.getTimeEntry(), stayDto.getTimeDeparture())
-                                    + "\tCantidad a Pagar:\t"
-                                    + ChronoUnit.MINUTES.between(stayDto.getTimeEntry(),
-                                            stayDto.getTimeDeparture())
-                                            * Constants.priceNoResident);
-                    System.out.println("\n");
-                }
-
-
-            } else {
-                System.out.println(
-                        "No se encontro registro de entrada al estacionamiento del auto, favor de ingresar una entrada2");
-            }
-
-        } else {
-            System.out.println("No se encontro Vehiculo registrado");
-        }
+        VehicleDTO vehicleDto = new VehicleDTO();
+        vehicleDto.setNumberPlate(numberPlate);
+        stayService.registerDeparture(vehicleDto);
 
     }
 
@@ -187,7 +147,7 @@ public class Menu {
     private void startNewMonth() {
         // Lógica para iniciar un nuevo mes (limpiar registros de estancias de vehículos oficiale y
         // tiempo estacionado de residentes)
-        stayService.iniciarNuevoMes();
+        stayService.startMonth();
         System.out.println("Nuevo mes iniciado exitosamente.");
     }
 
@@ -195,7 +155,7 @@ public class Menu {
         System.out.print("Ingrese el nombre del informe a generar: ");
         String nameFile = scanner.nextLine();
 
-        stayService.generarInformePagosResidentes(nameFile);
+        stayService.generateResidentPayment(nameFile);
         System.out.println("Informe de pagos de residentes generado exitosamente.");
     }
 }

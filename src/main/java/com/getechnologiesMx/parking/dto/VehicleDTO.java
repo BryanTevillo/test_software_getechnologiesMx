@@ -11,6 +11,7 @@ public class VehicleDTO {
     private String numberPlate;
     private TypeVehicleDTO typeVehicleDTO;
 
+
     public VehicleDTO(Vehicle vehicle) {
         this.id = vehicle.getId();
         this.numberPlate = vehicle.getNumberPlate();

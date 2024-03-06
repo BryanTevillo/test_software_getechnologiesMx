@@ -13,7 +13,8 @@ public class StayDTO {
     private LocalDateTime timeEntry;
     private LocalDateTime timeDeparture;
     private VehicleDTO vehicleDTO;
-
+    private Long timeTotalMin;
+    private Double payment;
 
     public StayDTO(Stay stay) {
         this.id = stay.getId();

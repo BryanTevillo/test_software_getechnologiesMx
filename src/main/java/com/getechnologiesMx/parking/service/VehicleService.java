@@ -18,25 +18,58 @@ public class VehicleService {
     @Autowired
     TypeVehicleService typeVehicleService;
 
-    public VehicleDTO oficcialRegisterVehicle(VehicleDTO vehicleDTO) {
-
-        vehicleDTO.setTypeVehicleDTO(typeVehicleService.findByName("Official"));
-        return fabricVehicleService.createVehicleDto(
-                vehicleRepository.save(fabricVehicleService.createVehicle(vehicleDTO)));
+    public Optional<VehicleDTO> oficcialRegisterVehicle(VehicleDTO vehicleDTO) {
+        if (!vehicleDTO.getNumberPlate().isEmpty() || vehicleDTO.getNumberPlate() != null) {
+            VehicleDTO vehicleDtoSearch = findByNumberPlate(vehicleDTO.getNumberPlate());
+            if (vehicleDtoSearch == null) {
+                vehicleDTO.setTypeVehicleDTO(typeVehicleService.findByName("Official"));
+                return Optional.of(fabricVehicleService.createVehicleDto(
+                        vehicleRepository.save(fabricVehicleService.createVehicle(vehicleDTO))));
+            } else {
+                System.out.println("Ya existe un vehiculo con esa matricula");
+                return Optional.empty();
+            }
+        } else {
+            System.out.println("No se puede registrar vehiculo sin matricula");
+            return Optional.empty();
+        }
     }
 
-    public VehicleDTO residentRegisterVehicle(VehicleDTO vehicleDTO) {
+    public Optional<VehicleDTO> residentRegisterVehicle(VehicleDTO vehicleDTO) {
+        if (!vehicleDTO.getNumberPlate().isEmpty() || vehicleDTO.getNumberPlate() != null) {
+            VehicleDTO vehicleDtoSearch = findByNumberPlate(vehicleDTO.getNumberPlate());
+            if (vehicleDtoSearch == null) {
+                vehicleDTO.setTypeVehicleDTO(typeVehicleService.findByName("Resident"));
+                return Optional.of(fabricVehicleService.createVehicleDto(
+                        vehicleRepository.save(fabricVehicleService.createVehicle(vehicleDTO))));
+            } else {
+                System.out.println("Ya existe un vehiculo con esa matricula");
+                return Optional.empty();
+            }
+        } else {
+            System.out.println("No se puede registrar vehiculo sin matricula");
+            return Optional.empty();
+        }
 
-        vehicleDTO.setTypeVehicleDTO(typeVehicleService.findByName("Resident"));
-        return fabricVehicleService.createVehicleDto(
-                vehicleRepository.save(fabricVehicleService.createVehicle(vehicleDTO)));
     }
 
-    public VehicleDTO noResidentRegisterVehicle(VehicleDTO vehicleDTO) {
+    public Optional<VehicleDTO> noResidentRegisterVehicle(VehicleDTO vehicleDTO) {
+        if (!vehicleDTO.getNumberPlate().isEmpty() || vehicleDTO.getNumberPlate() != null) {
+            VehicleDTO vehicleDtoSearch = findByNumberPlate(vehicleDTO.getNumberPlate());
+            if (vehicleDtoSearch == null) {
+                vehicleDTO.setTypeVehicleDTO(typeVehicleService.findByName("NoResident"));
+                return Optional.of(fabricVehicleService.createVehicleDto(
+                        vehicleRepository.save(fabricVehicleService.createVehicle(vehicleDTO))));
+            } else {
+                System.out.println("Ya existe un vehiculo con esa matricula");
+                return Optional.empty();
+            }
+        } else {
+            System.out.println("No se puede registrar vehiculo sin matricula");
+            return Optional.empty();
+        }
 
-        vehicleDTO.setTypeVehicleDTO(typeVehicleService.findByName("NoResident"));
-        return fabricVehicleService.createVehicleDto(
-                vehicleRepository.save(fabricVehicleService.createVehicle(vehicleDTO)));
+
     }
 
     public VehicleDTO findByNumberPlate(String numberPlate) {
